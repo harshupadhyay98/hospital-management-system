@@ -1,0 +1,21 @@
+{
+  "name": "hospital-frontend",
+  "version": "1.0.0",
+  "description": "Hospital Management System Frontend",
+  "main": "index.js",
+  "scripts": {
+    "dev": "npx @tailwindcss/cli -i ./src/css/input.css -o ./src/css/output.css --watch",
+    "build": "npx @tailwindcss/cli -i ./src/css/input.css -o ./src/css/output.css",
+    "start": "npx serve . -s"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@tailwindcss/cli": "^4.3.3",
+    "tailwindcss": "^4.3.3"
+  },
+  "devDependencies": {
+    "serve": "^14.2.4"
+  }
+}
