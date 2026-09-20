@@ -3,11 +3,11 @@ const path = require("node:path");
 const mysql = require("mysql2/promise");
 
 const pool = mysql.createPool({
-    host: "gateway01.ap-southeast-1.prod.aws.tidbcloud.com",
-    port: 4000,
-    user: "3eYD2XSDHAoscoa.root",
-    password: "5aqui98SSfsHRkXa",
-    database: "citycare_hospital",
+    host: process.env.DB_HOST || "gateway01.ap-southeast-1.prod.aws.tidbcloud.com",
+    port: Number(process.env.DB_PORT) || 4000,
+    user: process.env.DB_USER || "3eYD2XSDHAosooa.rootcd..",
+    password: process.env.DB_PASSWORD || "18YKKspFBceLVM4G",
+    database: process.env.DB_NAME || "citycare_hospital",
     waitForConnections: true,
     connectionLimit: 10,
     dateStrings: true,
