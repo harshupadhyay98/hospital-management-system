@@ -2,6 +2,7 @@ const fs = require("node:fs");
 const path = require("node:path");
 const mysql = require("mysql2/promise");
 
+
 const config = {
     host: process.env.DB_HOST || "127.0.0.1",
     port: Number(process.env.DB_PORT) || 3306,
@@ -10,7 +11,10 @@ const config = {
     database: process.env.DB_NAME || "citycare_hospital",
     waitForConnections: true,
     connectionLimit: 10,
-    dateStrings: true
+    dateStrings: true,
+    ssl: process.env.DB_HOST && process.env.DB_HOST !== "127.0.0.1" && process.env.DB_HOST !== "localhost"
+        ? { minVersion: "TLSv1.2", rejectUnauthorized: true }
+        : undefined
 };
 
 const pool = mysql.createPool(config);
