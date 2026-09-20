@@ -2,22 +2,18 @@ const fs = require("node:fs");
 const path = require("node:path");
 const mysql = require("mysql2/promise");
 
-
-const config = {
-    host: process.env.DB_HOST || "127.0.0.1",
-    port: Number(process.env.DB_PORT) || 3306,
-    user: process.env.DB_USER || "root",
-    password: process.env.DB_PASSWORD || "",
-    database: process.env.DB_NAME || "citycare_hospital",
-    waitForConnections: true,
-    connectionLimit: 10,
-    dateStrings: true,
-    ssl: process.env.DB_HOST && process.env.DB_HOST !== "127.0.0.1" && process.env.DB_HOST !== "localhost"
-        ? { minVersion: "TLSv1.2", rejectUnauthorized: true }
-        : undefined
-};
-
-const pool = mysql.createPool(config);
+const pool = process.env.DATABASE_URL
+    ? mysql.createPool(process.env.DATABASE_URL)
+    : mysql.createPool({
+          host: process.env.DB_HOST || "127.0.0.1",
+          port: Number(process.env.DB_PORT) || 3306,
+          user: process.env.DB_USER || "root",
+          password: process.env.DB_PASSWORD || "",
+          database: process.env.DB_NAME || "citycare_hospital",
+          waitForConnections: true,
+          connectionLimit: 10,
+          dateStrings: true
+      });
 
 async function initDatabase() {
     const schema = fs.readFileSync(
@@ -99,7 +95,7 @@ async function initDatabase() {
              WHERE TABLE_SCHEMA = ?
              AND TABLE_NAME = ?
              AND COLUMN_NAME = ?`,
-            [config.database, table, column]
+            [process.env.DB_NAME || "citycare_hospital", table, column]
         );
 
         if (!columns[0].count) {
