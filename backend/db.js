@@ -3,17 +3,17 @@ const path = require("node:path");
 const mysql = require("mysql2/promise");
 
 const pool = mysql.createPool({
-    host: process.env.DB_HOST || "gateway01.ap-southeast-1.prod.aws.tidbcloud.com",
-    port: Number(process.env.DB_PORT) || 4000,
-    user: process.env.DB_USER || "3eYD2XSDHAoscoa.root",
-    password: process.env.DB_PASSWORD || "5aqui98SSfsHRkXa",
-    database: process.env.DB_NAME || "citycare_hospital",
+    host: "gateway01.ap-southeast-1.prod.aws.tidbcloud.com",
+    port: 4000,
+    user: "3eYD2XSDHAoscoa.root",
+    password: "5aqui98SSfsHRkXa",
+    database: "citycare_hospital",
     waitForConnections: true,
     connectionLimit: 10,
     dateStrings: true,
     ssl: {
         minVersion: "TLSv1.2",
-        rejectUnauthorized: true
+        rejectUnauthorized: false
     }
 });
 
@@ -97,7 +97,7 @@ async function initDatabase() {
              WHERE TABLE_SCHEMA = ?
              AND TABLE_NAME = ?
              AND COLUMN_NAME = ?`,
-            [process.env.DB_NAME || "citycare_hospital", table, column]
+            ["citycare_hospital", table, column]
         );
 
         if (!columns[0].count) {
