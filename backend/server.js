@@ -195,4 +195,13 @@ app.get("/api/lab-reports/:id", async (req, res) => { try { const [rows] = await
 app.get("/api/dashboard", async (_req, res) => { try { const [[counts]] = await pool.query("SELECT (SELECT COUNT(*) FROM patients) AS totalPatients,(SELECT COUNT(*) FROM doctors) AS totalDoctors,(SELECT COUNT(*) FROM departments) AS totalDepartments,(SELECT COUNT(*) FROM appointments WHERE appointment_date=CURDATE()) AS todayAppointments"); const [upcoming] = await pool.query("SELECT * FROM appointments WHERE appointment_date>=CURDATE() AND status IN ('pending','confirmed') ORDER BY appointment_date,appointment_time LIMIT 10"); const [recentPatients] = await pool.query("SELECT id,patient_id,full_name,mobile,created_at FROM patients ORDER BY created_at DESC LIMIT 10"); const [statusSummary] = await pool.query("SELECT status,COUNT(*) AS count FROM appointments GROUP BY status"); return send(res, 200, "Dashboard fetched successfully.", { counts, upcoming, recentPatients, statusSummary }); } catch (e) { return dbError(res, e, "Unable to fetch dashboard."); } });
 
 app.use((_req, res) => send(res, 404, "Route not found."));
-initDatabase().then(() => app.listen(port, () => console.log(`CityCare API running at http://localhost:${port}`))).catch((e) => { console.error("Database initialization failed:", e.message); process.exit(1); });
+initDatabase()
+    .then(() => {
+        app.listen(port, "0.0.0.0", () => {
+            console.log(`CityCare API running on port ${port}`);
+        });
+    })
+    .catch((e) => {
+        console.error("Database initialization failed:", e.message);
+        process.exit(1);
+    });
